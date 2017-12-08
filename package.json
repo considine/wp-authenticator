@@ -1,0 +1,39 @@
+{
+  "name": "node-wp-auth",
+  "version": "1.0.0",
+  "description": "Module for authenticating wordpress and using REST API ",
+  "main": "index.js",
+  "dependencies": {
+    "cookie": "^0.3.1",
+    "dotenv": "^4.0.0",
+    "install": "^0.10.2",
+    "jasmine": "^2.8.0",
+    "npm": "^5.5.1",
+    "request": "^2.83.0",
+    "request-promise": "^4.2.2"
+  },
+  "devDependencies": {
+    "jasmine-node": "^1.14.5"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/considine/wp-authenticator.git"
+  },
+  "keywords": [
+    "wordpress",
+    "rest",
+    "api",
+    "disable",
+    "authentication",
+    "cookies"
+  ],
+  "author": "Jack Considine <jackconsidine3@gmail.com> (jackconsidine.wordpress.com)",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/considine/wp-authenticator/issues"
+  },
+  "homepage": "https://github.com/considine/wp-authenticator#readme"
+}
