@@ -28,17 +28,17 @@ module.exports = {
     };
     return new Promise(function(resolve, reject) {
       request(options, function(error, response, body) {
-        try {
-          var cookies = response.headers['set-cookie'];
-        } catch(e) {
-          error = e;
+        if (! error) {
+          try {
+            var cookies = response.headers['set-cookie'];
+          } catch(e) {
+            error = e;
+          }
         }
         if (error) return reject(error);
         resolve(cookies);
       })
     })
-
-
   },
 
   restAPIRequestWithAuthenticationCookie : function (options) {
