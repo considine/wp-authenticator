@@ -9,8 +9,7 @@
     "install": "^0.10.2",
     "jasmine": "^2.8.0",
     "npm": "^5.5.1",
-    "request": "^2.83.0",
-    "request-promise": "^4.2.2"
+    "request": "^2.83.0"
   },
   "devDependencies": {
     "jasmine-node": "^1.14.5"
