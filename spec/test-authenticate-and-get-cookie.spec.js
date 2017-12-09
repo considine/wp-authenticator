@@ -17,7 +17,7 @@ if (baseUrl[baseUrl.length-1] === "/") baseUrl = baseUrl = baseUrl.substring(0, 
 
 
 var loginUrl = baseUrl  + "/wp-login.php";
-var testGetPostUrl = baseUrl  + "/index.php/wp-json/wp/v2/posts";
+var testGetPostUrl = baseUrl  + "/index.php/wp-json/wp/v2/posts/110";
 
 
 
@@ -57,6 +57,7 @@ describe("node-wp-auth", function() {
       })
       .then(WpAuthenticator.restAPIRequestWithAuthenticationCookie)
       .then((resp) => {
+        console.log(resp);
         done();
       })
       .catch((e) => done(e));
