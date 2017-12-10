@@ -17,7 +17,7 @@ if (baseUrl[baseUrl.length-1] === "/") baseUrl = baseUrl = baseUrl.substring(0, 
 
 
 var loginUrl = baseUrl  + "/wp-login.php";
-var testGetPostUrl = baseUrl  + "/index.php/wp-json/wp/v2/posts/110";
+var testGetPostUrl = baseUrl  + "/index.php/wp-json/wp/v2/posts/";
 
 
 
@@ -27,11 +27,14 @@ describe("node-wp-auth", function() {
     throw new Error("Please set your test username and password in the .env file in the root. see .env-sample to get started");
 
   }
-  describe("#authenticateAndGetCookie()", function() {
+
+
+
+  describe("#authenticateWithCredentials()", function() {
     it('should return a valid cookie when authenticating on a valid uri with valid login params', function (done) {
-      WpAuthenticator.authenticateAndGetCookie(loginUrl, username, password).then((cookie) => {
-        if (cookie) done();
-        if (! cookie ) done (new Error("no valid cookie returned!"));
+      WpAuthenticator.authenticateWithCredentials(loginUrl, {formbody : {log : username, pwd : password}}).then((resp) => {
+        var cookie = WpAuthenticator.extractCookie(resp);
+        done();
       })
       .catch((e) => {
         done(e);
@@ -51,16 +54,55 @@ describe("node-wp-auth", function() {
 
     it ("should be able to retrieve posts (where REST has been disabled)", function (done) {
       var endpoint = testGetPostUrl;
-      WpAuthenticator.authenticateAndGetCookie(loginUrl, username, password)
-      .then((cookie) => {
-        return {authcookie : cookie, endpoint : endpoint};
+      WpAuthenticator.authenticateWithCredentials(loginUrl, {formbody : {log : username, pwd : password}})
+      .then((resp) => {
+        return {authcookie : WpAuthenticator.extractCookie(resp), endpoint : endpoint};
       })
       .then(WpAuthenticator.restAPIRequestWithAuthenticationCookie)
       .then((resp) => {
-        console.log(resp);
         done();
       })
       .catch((e) => done(e));
     });
   });
+
+  describe("#restAPIRequestWithToken()", function() {
+    // it ("should retrieve posts with just a token", function(done) {
+    //   // Get token
+    //   WpAuthenticator.restAPIRequestWithToken({"token" : process.env.wp_test_token, "endpoint" : testGetPostUrl})
+    //   .then((resp) => {
+    //     done();
+    //   })
+    //   .catch((e) => {
+    //     done(e);
+    //   })
+    // });
+
+
+    it("should be able to retrieve a token and use it in authentication", function (done) {
+      WpAuthenticator.authenticateWithCredentials(baseUrl + "/index.php/wp-json/jwt-auth/v1/token", {jsonbody : {username : username, password : password}})
+      .then((resp) => {
+        return resp.body;
+        // try {
+        //   return  JSON.parse(resp.body);
+        // } catch(e) {
+        //   throw new Error("failed to parse json: " + JSON.stringify(resp));
+        // }
+      })
+      .then((jsonbody) => {
+        var token = jsonbody["token"];
+        console.log(jsonbody);
+        return {"endpoint" : testGetPostUrl, "token" : token}
+      })
+      .then(WpAuthenticator.restAPIRequestWithToken)
+      .then((resp) =>{
+
+        done();
+      } )
+      .catch((e) => {
+        done(e);
+      });
+    });
+  });
+
 });
